@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+ 
+<head>
+  <title>数值积分 - 梯形法、自适应辛普森法、Newton-Cotes公式</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="generator" content="GitHub" />
+  <meta name="author" content="MapMaths">
+  <meta property="og:type" content="GitHub-Page" />
+  <meta property="og:description" content="MapMaths的博客" />
+  <meta property="og:image" content="/favicon.ico" />
+
+  <link rel="stylesheet" type="text/css" href="/style.css" />
+  <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" integrity="sha384-018NAG72u4VZOnuDWITeFX3sAZwR1olH/YyXeCFp2k4/RjIW9we+TZ2B8DxW0Iuc" crossorigin="anonymous">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62785981?v=4" />
+
+  <script src="/script.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.js"></script>
+  <script src="https://unpkg.com/@triggerjs/trigger@1.0.8/dist/bundle.js" integrity="sha384-ABonN/Dfg/YXZTj14FSDcJmkGZm5f8PbnE6DEOkPWRuUkrtveGahsH0shc40NaKW" crossorigin="anonymous" defer></script>
+</head>
+<body>
+  施工ing
+  <div id="main" style="width:600px;height:400px;"></div>
+  <script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var option = {
+      title: {
+         text: 'ECharts 入门示例'
+        },
+        tooltip: {},
+        legend: {
+          data: ['销量']
+        },
+        xAxis: {
+          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+        },
+        yAxis: {},
+        series: [
+          {
+            name: '销量',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20]
+          }
+        ]
+      };
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option);
+  </script>
+</body>
+</html>
