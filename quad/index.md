@@ -1,4 +1,4 @@
-<script src="echarts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.js"></script>
 <div id="main" style="width: 600px;height:400px;"></div>
     <script type="text/javascript">
       // 基于准备好的dom，初始化echarts实例
