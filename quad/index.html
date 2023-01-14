@@ -18,37 +18,19 @@
 
   <script src="/script.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script src="https://unpkg.com/@triggerjs/trigger@1.0.8/dist/bundle.js" integrity="sha384-ABonN/Dfg/YXZTj14FSDcJmkGZm5f8PbnE6DEOkPWRuUkrtveGahsH0shc40NaKW" crossorigin="anonymous" defer></script>
 </head>
-<body>
-  施工ing
-  <div id="main" style="width:600px;height:400px;"></div>
-  <script type="text/javascript">
-    var myChart = echarts.init(document.getElementById('main'));
+<body margin-left="15vw" margin-top: "15vh" margin-right: "15vw">
+ 正在撰写中...
+  <i>前置知识：定积分</i>
+  <i>本文涉及：黎曼和、梯形法、辛普森法（以及自适应辛普森法）、Newton-Cotes公式
+  <h2>引言</h2>
+    由于绝大多数函数都很难用符号积分求出它们的原函数（然后可以用牛顿-莱布尼兹公式算出它的定积分），而我们有时候又希望能够计算出它们的定积分，因此必须要用到一种“数值计算”定积分（数值积分）的方法——这种算法必定没有符号积分精确，但在生活中的大多数情况下已经足够了。因而，我们希望有一种方法，能够快而准地计算出给定函数、给定区间的定积分。
 
-    var option = {
-      title: {
-         text: 'ECharts 入门示例'
-        },
-        tooltip: {},
-        legend: {
-          data: ['销量']
-        },
-        xAxis: {
-          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
-        },
-        yAxis: {},
-        series: [
-          {
-            name: '销量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
-          }
-        ]
-      };
-
-      // 使用刚指定的配置项和数据显示图表。
-      myChart.setOption(option);
-  </script>
+  <h2>黎曼和</h2>
+    德国数学家伯恩哈德·黎曼（Bernhard Riemann, 1826-1866）正式定义了现代数学中的定积分（或者说黎曼积分），这一定义是根据“黎曼和”的概念给出的。黎曼和的本质就是将一个函数的面积沿竖直方向分割成若干个小矩形，然后求出所有矩形的面积和（注意！并不是严格的“面积”，这里的“面积”是有方向的，即如果函数值的符号是负的那么算出来的“面积”也是负的，反之同理）。而黎曼积分的定义大致就是当这些分割出来的矩形的宽越来越小时其面积和所趋向的值。
+    不过，计算黎曼和似乎并不是一种效率高的算法，不过它有助于让我们理解数值积分的原理，毕竟了解一下规范的定义还是可以帮助我们改进方法的。\(ξ\)
 </body>
 </html>
