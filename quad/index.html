@@ -2,14 +2,14 @@
 <html lang="zh">
  
 <head>
-  <title>数值积分 - 梯形法、自适应辛普森法、Newton-Cotes公式</title>
+  <title>数值积分</title>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="generator" content="GitHub" />
   <meta name="author" content="MapMaths">
   <meta property="og:type" content="GitHub-Page" />
-  <meta property="og:description" content="MapMaths的博客" />
+  <meta property="og:description" content="MapMaths的博客 - 数值积分" />
   <meta property="og:image" content="/favicon.ico" />
 
   <link rel="stylesheet" type="text/css" href="/style.css" />
@@ -22,7 +22,8 @@
   <script id="MathJax-script" async src="https://cdn.bootcss.com/mathjax/3.0.5/es5/tex-mml-chtml.js"></script>
   <script src="https://unpkg.com/@triggerjs/trigger@1.0.8/dist/bundle.js" integrity="sha384-ABonN/Dfg/YXZTj14FSDcJmkGZm5f8PbnE6DEOkPWRuUkrtveGahsH0shc40NaKW" crossorigin="anonymous" defer></script>
 </head>
-<body style="margin-left=15vw; margin-top: 15vh; margin-right: 15vw;">
+<body style="margin-left: 15vw; margin-top: 15vh; margin-right: 15vw;">
+  <h1>数值积分</h1>
   <i>前置知识：定积分</i>
   <i>本文涉及：黎曼和、矩形法、梯形法、辛普森法（以及自适应辛普森法）、Newton-Cotes公式</i>
   <h2>引言</h2>
@@ -32,34 +33,26 @@
   <h2>黎曼和（Riemann sum）</h2>
   <p>德国数学家伯恩哈德·黎曼（Bernhard Riemann, 1826-1866）正式定义了现代数学中的定积分（或者说黎曼积分），这一定义是根据“黎曼和”的概念给出的。黎曼和的本质就是将一个函数的面积沿竖直方向分割成若干个小矩形，然后求出所有矩形的面积和（注意！并不是严格的“面积”，这里的“面积”是有方向的，即如果函数值的符号是负的那么算出来的“面积”也是负的，反之同理）。而黎曼积分的定义大致就是当这些分割出来的矩形的宽越来越小时其面积和所趋向的值。</p>
   <p>或者规范一点，黎曼和的定义是：</p>
-  <p>设函数f(x)在区间[a,b]上有界，在[a,b]中任意插入若干分点\(a=x_0&lt;x_1&lt;\cdots&lt;x_{n-1}&lt;x_n=b\)，并将该区间分成\(n\)个小区间[x_0,x_1]、[x_1,x_2]、\cdots、[x_{n-1},x_n]，则每个区间[x_{i-1},x_i]的长度\Delta x_i=x_i-x_{i-1}.并在每个区间[x_{i-1},x_i]上任取一点\xi_i，作函数值f(\xi_i)与区间长度\Delta x_i的乘积并求和（注：这一步的几何意义是作了n个矩形并求其面积和）</p>
-  <p>则黎曼和被定义为\[S=\sum_{i=1}^nf(\xi_i)\Delta x_i\]</p>
-  <p>都讲到这儿了，顺便普及一下黎曼积分的定义</p>
-  <p>在刚才定义的基础上，记\lambda=\max_{i=1}^n(\Delta x_i)，即所有区间长度的最大值，如果当\(\lambda\to0\)时，\(S\)的极限总存在，且与区间[a,b]的分法及点\xi_i的取法无关，则称这个极限I为函数f(x)在区间[a,b]上的黎曼积分，记作\int_a^bf(x)\mathrm dx，即有
-  \[\int_a^bf(x)\mathrm dx=I=\lim_{\lambda\to0}\sum_{i=1}^nf(\xi_i)\Delta x_i\]</p>
-不过，黎曼和仅仅用于定积分的定义，不过我们可以“魔改”这个定义并得出一种数值积分方法——矩形法。
+  <p>设函数\(f(x)\)在区间\([a,b]\)上有界，在\([a,b]\)中任意插入若干分点\(a=x_0&lt;x_1&lt;\cdots&lt;x_{n-1}&lt;x_n=b\)，并将该区间分成\(n\)个小区间\([x_0,x_1]\)、\([x_1,x_2]\)、\(\cdots\)、\([x_{n-1},x_n]\)，则每个区间\([x_{i-1},x_i]\)的长度\(\Delta x_i=x_i-x_{i-1}\)。并在每个区间\([x_{i-1},x_i]\)上任取一点\(\xi_i\)，求函数值\(f(\xi_i)\)与区间长度\(\Delta x_i\)的乘积并求和（注：这一步的几何意义是作了\(n\)个矩形并求其面积和）</p>
+  则黎曼和被定义为\[S=\sum_{i=1}^nf(\xi_i)\Delta x_i\]
+  顺便，黎曼积分的定义大致就是所有矩形宽度都为无穷小时得到的黎曼和。
+  <p>不过，黎曼和仅仅用于定积分的定义，然而我们可以“魔改”这个定义并得出一种数值积分方法——矩形法。</p>
 
   <h2>矩形法（rectangle rule）</h2>
 矩形法的核心思想就是：使用矩形来拟合曲线下方的面积
-与刚才的黎曼和不同的是，我们将使用等宽的矩形（而不是任意宽度的矩形），但和黎曼和一样的是，矩形宽越小拟合出来的值就越精确。另外，对于在每一个区间里选的\xi_i，通常我们会使用该区间的上界x_i、下界x_{i-1}或中点\frac{x_{i-1}+x_i}2。使用中点的函数值作为矩形高的方法也被称为“中点法则（midpoint rule）”。
+与刚才的黎曼和不同的是，我们将使用等宽的矩形（而不是任意宽度的矩形），但和黎曼和一样的是，矩形宽越小拟合出来的值就越精确。另外，对于在每一个区间里选的\(\xi_i\)，通常我们会使用该区间的上界\(x_i\)、下界\(x_{i-1}\)或中点\(\frac{x_{i-1}+x_i}2\)。使用中点的函数值作为矩形高的方法也被称为“中点法则（midpoint rule）”。
 于是，我们将区间[a,b]等分成n个小区间，则每个区间的长度都为\(\Delta x=\frac{b-a}n\)。
-若$$\xi_i$$取区间的上界，即$$\xi_i=x_i$$，则$$n\to\infty$$时，$$\frac{b-a}n\sum_{i=1}^nf(x_i)\to\int_a^bf(x)\mathrm dx$$
-若$$\xi_i$$取区间的下界，即$$\xi_i=x_{i-1}$$，则$$n\to\infty$$时，$$\frac{b-a}n\sum_{i=1}^nf(x_{i-1})\to\int_a^bf(x)\mathrm dx$$
-若$$\xi_i$$取区间的中点，即$$\xi_i=\frac{x_{i-1}+x_i}2$$，则$$n\to\infty$$时，$$\frac{b-a}n\sum_{i=1}^nf\left(\frac{x_{i-1}+x_i}2\right)\to\int_a^bf(x)\mathrm dx$$
-在实际计算中，我们会将n用一个具体的数值代替，这个数越大，结果越精确，但计算的速度也会随之降低。从几何上理解，n增大的过程中我们其实是在增加矩形的数量，相对于分辨率多了，结果自然就更精确了。
+若\(\xi_i\)取区间的上界，即\(\xi_i=x_i\)，则\(n\to\infty\)时，$$\frac{b-a}n\sum_{i=1}^nf(x_i)\to\int_a^bf(x)\mathrm dx$$
+若\(\xi_i\)取区间的下界，即\(\xi_i=x_{i-1}$$，则\(n\to\infty\)时，$$\frac{b-a}n\sum_{i=1}^nf(x_{i-1})\to\int_a^bf(x)\mathrm dx$$
+若\(\xi_i\)取区间的中点，即\(\xi_i=\frac{x_{i-1}+x_i}2\)，则\(n\to\infty\)时，$$\frac{b-a}n\sum_{i=1}^nf\left(\frac{x_{i-1}+x_i}2\right)\to\int_a^bf(x)\mathrm dx$$
+在实际计算中，我们会将\(n\)用一个具体的数值代替，这个数越大，结果越精确，但计算的速度也会随之降低。从几何上理解，\(n\)增大的过程中我们其实是在增加矩形的数量，相对于分辨率多了，结果自然就更精确了。
 
   <h2>梯形法（trapezoidal rule）</h2>
 矩形法并不见得是较为准确的方法，因为它在每个区间里只用到了一个函数值（也就是只插了一次值）。那么如果我们既用到区间下界的函数值，又用到上限的呢？我们可以在每个区间内过区间上界、下界的函数值作出一条直线，把这些区间变成一个个梯形，然后考虑将曲线面积用梯形拟合。
-和矩形法一样将区间$$[a,b]$$ $$n$$等分，取每一个小区间的上界x_i和下界x_{i-1}，我们将x_i的函数值作为上底，将x_{i-1}的函数值作为下底，将每一个区间的长度frac{b-a}n作为高，然后利用梯形面积公式可以求出每一个区间所对应的梯形面积，全部相加即可。
+和矩形法一样将区间\([a,b]\) \(n\)等分，取每一个小区间的上界\(x_i\)和下界\(x_{i-1}\)，我们将\(x_i\)的函数值作为上底，将\(x_{i-1}\)的函数值作为下底，将每一个区间的长度\(frac{b-a}n\)作为高，然后利用梯形面积公式可以求出每一个区间所对应的梯形面积，全部相加即可。
 于是，有$$\int_a^bf(x)\mathrm dx\approx\frac{b-a}n\left[\frac{f(x_0)+f(x_1)}2+\frac{f(x_1)+f(x_2)}2+\cdots+\frac{f(x_{n-1})+f(x_n)}2\right]$$
 化简得$$\int_a^bf(x)\mathrm dx\approx\frac{b-a}n\left[\frac{f(x_0)+f(x_n)}2+f(x_1)+f(x_2)+\cdots+f(x_{n-1})\right]$$
-所以，$$n\to\infty$$时，$$\frac{b-a}n\left[\frac{f(x_0)+f(x_n)}2+\sum_{i=1}^{n-1}f(x_i)\right]\to\int_a^bf(x)\mathrm dx$$
-显然，这样算出来的值恰好是矩形法中取上界、下界得出的两个近似值的平均值
-
-  <h2>辛普森法（Simpson's rule）</h2>
-
-矩形法中，每个区间里我们用了一次函数值；梯形法中我们用了两次，在每个区间内绘制了一条直线；那我们能不能插三次值，在每个区间内绘制一条抛物线，然后用抛物线底部的面积来拟合曲线的面积呢？
-这时，在每个小区间内，我们取它的下界x_{i-1}、中点$$\frac{x_{i-1}+x_i}2$$和上界x_i，并过这三个点作出一条抛物线，设这条抛物线是$$g(x)=ax^2+bx+c$$，则其原函数$$G(x)=\frac13ax^3+\frac12bx^2+cx+D$$其中$$D$$是常数。
-于是每个小区间
+所以，\(n\to\infty\)时，$$\frac{b-a}n\left[\frac{f(x_0)+f(x_n)}2+\sum_{i=1}^{n-1}f(x_i)\right]\to\int_a^bf(x)\mathrm dx$$
+显然，这样算出来的值恰好是矩形法中取上界、下界得出的两个近似值的平均值。
 </body>
 </html>
