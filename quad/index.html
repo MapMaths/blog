@@ -50,7 +50,7 @@
   <h2>矩形法（rectangle rule）</h2>
 矩形法的核心思想就是：使用矩形来拟合曲线下方的面积
 与刚才的黎曼和不同的是，我们将使用等宽的矩形（而不是任意宽度的矩形），但和黎曼和一样的是，矩形宽越小拟合出来的值就越精确。另外，对于在每一个区间里选的\xi_i，通常我们会使用该区间的上界x_i、下界x_{i-1}或中点\frac{x_{i-1}+x_i}2。使用中点的函数值作为矩形高的方法也被称为“中点法则（midpoint rule）”。
-于是，我们将区间[a,b]等分成n个小区间，则每个区间的长度都为\Delta x=frac{b-a}n
+于是，我们将区间[a,b]等分成n个小区间，则每个区间的长度都为$\Delta x=frac{b-a}n$。
 若$$\xi_i$$取区间的上界，即$$\xi_i=x_i$$，则$$n\to\infty$$时，$$\frac{b-a}n\sum_{i=1}^nf(x_i)\to\int_a^bf(x)\mathrm dx$$
 若$$\xi_i$$取区间的下界，即$$\xi_i=x_{i-1}$$，则$$n\to\infty$$时，$$\frac{b-a}n\sum_{i=1}^nf(x_{i-1})\to\int_a^bf(x)\mathrm dx$$
 若$$\xi_i$$取区间的中点，即$$\xi_i=\frac{x_{i-1}+x_i}2$$，则$$n\to\infty$$时，$$\frac{b-a}n\sum_{i=1}^nf\left(\frac{x_{i-1}+x_i}2\right)\to\int_a^bf(x)\mathrm dx$$
