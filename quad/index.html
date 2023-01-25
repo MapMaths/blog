@@ -15,6 +15,27 @@
   <link rel="stylesheet" type="text/css" href="/style.css" />
   <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" integrity="sha384-018NAG72u4VZOnuDWITeFX3sAZwR1olH/YyXeCFp2k4/RjIW9we+TZ2B8DxW0Iuc" crossorigin="anonymous">
   <link rel="icon" href="https://avatars.githubusercontent.com/u/62785981?v=4" />
+  
+  <style>
+    body {
+      scroll-behavior: smooth;
+    }
+    
+    pre {
+      background-color: #f2f1f1;
+      border: 1px solid transparent;
+      margin: 1rem 0 2rem;
+      padding: 1rem 2.5rem 1rem 1rem;
+      border-radius: 0.25rem;
+      font-family: Menlo,Consolas,Monaco,Liberation Mono,Lucida Console,monospace;
+      font-size: 0.833rem;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      white-space: -moz-pre-wrap;
+      white-space: -pre-wrap;
+      white-space: -o-pre-wrap;
+    }
+  </style>
 
   <script src="/script.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.js"></script>
@@ -23,10 +44,9 @@
   <script src="https://unpkg.com/@triggerjs/trigger@1.0.8/dist/bundle.js" integrity="sha384-ABonN/Dfg/YXZTj14FSDcJmkGZm5f8PbnE6DEOkPWRuUkrtveGahsH0shc40NaKW" crossorigin="anonymous" defer></script>
 </head>
 <body style="margin-left: 15vw; margin-top: 15vh; margin-right: 15vw; margin-bottom: 15vh;">
-  <pre>持续更新中……</pre>
   <h1>数值积分</h1>
   <i>前置知识：定积分</i>
-  <i>本文涉及：黎曼和、矩形法、梯形法</i>
+  <i>本文涉及：黎曼和、矩形法、梯形法、（自适应）辛普森法、Newton-Cotes公式</i>
   <h2>引言</h2>
 
   由于绝大多数函数都很难用符号积分求出它们的原函数（然后可以用牛顿-莱布尼兹公式算出它的定积分），而我们有时候又希望能够计算出它们的定积分，因此必须要用到一种“数值计算”定积分（数值积分）的方法——这种算法必定没有符号积分精确，但在生活中的大多数情况下已经足够了。因而，我们希望有一种方法，能够快而准地计算出给定函数、给定区间的定积分。
@@ -55,5 +75,55 @@
 化简得$$\int_a^bf(x)\mathrm dx\approx\frac{b-a}n\left[\frac{f(x_0)+f(x_n)}2+f(x_1)+f(x_2)+\cdots+f(x_{n-1})\right]$$
 所以，\(n\to\infty\)时，$$\frac{b-a}n\left[\frac{f(x_0)+f(x_n)}2+\sum_{i=1}^{n-1}f(x_i)\right]\to\int_a^bf(x)\mathrm dx$$
 显然，这样算出来的值恰好是矩形法中取上界、下界得出的两个近似值的平均值。
+  <h2>辛普森法（Simpson's rule）</h2>
+
+矩形法中，每个区间里我们用了一次函数值；梯形法中我们用了两次，在每个区间内绘制了一条直线；那我们能不能插三次值，在每个区间内绘制一条抛物线，然后用抛物线底部的面积来拟合曲线的面积呢？
+这时，在每个小区间内，我们取它的下界x_{i-1}、中点$$\frac{x_{i-1}+x_i}2$$和上界x_i的函数值，并过这三个点作出一条抛物线，设这条抛物线是$$g(x)=ax^2+bx+c$$，则其原函数$$G(x)=\frac13ax^3+\frac12bx^2+cx+D$$其中$$D$$是常数。
+于是每个小区间对应的抛物线下面积，即函数\(g(x)\)在区间\([x_{i-1},x_i]\)上的定积分，为
+\[\begin{align}
+\int_{x_{i-1}}^{x_i}g(x)&=G(x_i)-G(x_{i-1})
+\\&=\frac13a\left(x_i^3-x_{i-1}^3\right)+\frac12b\left(x_i^2-x_{i-1}^2\right)+c(x_i-x_{i-1})
+\\&=(x_i-x_{i-1})\left[\frac13a\left(x_i^2+x_ix_{i-1}+x_{i-1}^2\right)+\frac12b(x_i+x_{i-1})+c\right]
+\\&=\frac{x_i-x_{i-1}}6\left(2ax_i^2+2ax_ix_{i-1}+2ax_{i-1}^2+3bx_i+3bx_{i-1}+6c\right)
+\\&=\frac{x_i-x_{i-1}}6\left\{\left(ax_i^2+2bx_i+c\right)+\left(ax_{i-1}^2+2bx_{i-1}+c\right)+4\left[a\left(\frac{x_{i-1}+x_i}2\right)^2+b\left(\frac{x_{i-1}+x_i}2\right)+c\right]\right\}
+\\&=\frac{x_i-x_{i-1}}6\left[g(x_i)+g(x_{i-1})+g\left(\frac{x_{i-1}+x_i}2\right)\right]
+\end{align}\]
+由于我们令\(g(x)\)经过\(f(x_{i-1})\)、\(f(\frac{x_{i-1}+x_i}2)\)、\(f(x_i)\)，有\(g(x_{i-1})=f(x_{i-1})\)、\(g(\frac{x_{i-1}+x_i}2)=f(\frac{x_{i-1}+x_i}2)\)、\(g(x_i)=f(x_i)\)
+所以，\(n\to\infty\)时，\[\sum_{i=1}^n\frac{x_i-x_{i-1}}6\left[f(x_i)+f(x_{i-1})+f\left(\frac{x_{i-1}+x_i}2\right)\right]\to\int_a^bf(x)\mathrm dx\]
+<p>当然，这个式子也可以进行化简和变形。</p>
+特别的，每一个小区间的积分公式被称为<b>辛普森公式</b>，即\[\int_a^b\approx\frac{b-a}6\left[f(a)+f(b)+f\left(\frac{a+b}2\right)\right]\]
+由于这种方法使用曲线而非直线拟合，精确而且速度快，就被广泛用于数值积分的算法中，于是自然也就产生了一些优化算法。
+
+  <h3>自适应辛普森法（adaptive Simpson's rule）</h3>
+
+考虑一个函数，它在一个区间\([a,b]\)内振荡比较密集，另一个区间\([c,d]\)内曲线非常平缓，而且接近于抛物线，这时为了<b>节省时间</b>，在使用辛普森法的过程中，我们可以在区间\([a,b]\)里分更多小区间，让它拟合得更精确，而在区间\([c,d]\)中把小区间分得少一点，这样时间更少。那么具体如何判断一个区间中的曲线“像不像”抛物线呢？例如我们的积分区间是\([a,b]\)，我们可以先把它拟合成一个抛物线并使用辛普森公式求这个抛物线的积分，再把这个区间均分成两个小区间，\([a,\frac{a+b}2]\)和\([a,\frac{a+b}2]\)，分别重复刚才的操作，也就是拟合成抛物线并求其积分，最后将这两个分出来的区间的近似积分相加，将所得值与原区间的近似积分值进行比较，若两者相近，则可以认为这个曲线（至少在大尺度上）比较像一个抛物线，于是直接返回这个近似值即可；若两者相差甚远，就把两个小区间再进行均分，再把上述操作放到两个小区间里递归，最后将所有的近似值相加，得到最终结果。
+<p>然而，这样的判断不一定正确，因而我们需要给递归次数设置最小值（有时还须设置最大值）。</p>
+贴个代码就方便理解了：
+<pre>double simpson(double l, double r) {
+  return (r - l)*(f(l) + 4*f((l + r)/2) + f(r))/6;  // 辛普森公式，f为设定的被积函数，积分区间是[l,r]
+}
+
+double asr(double l, double r, double eps, double ans, int step) { // ans是区间[l,r]的积分近似值，传入（而不是自己算）的目的是防止重复计算
+  double mid = (l + r)/2;
+  double fl = simpson(l, mid), fr = simpson(mid, r); // 分成两个小区间分别求近似值
+  if (abs(fl + fr - ans) <= 15*eps && step < 0) 
+    return fl + fr + (fl + fr - ans)/15;  // 足够相似的话就直接返回
+  return asr(l, mid, eps / 2, fl, step - 1) + asr(mid, r, eps / 2, fr, step - 1);  // 否则再分成两段递归求解
+}
+
+double calc(double l, double r, double eps) { // 在main调用该函数，eps的值自定，1e-7左右即可
+  return asr(l, r, eps, simpson(l, r), 12); // 至少递归12次
+}</pre>
+
+<h2>Newton-Cotes公式</h2>
+在矩形法中，我们在每个小区间内插了一个值；在梯形法中，则插了两个值；而在辛普森法中我们插了三个值。以此类推，自然会想到能不能插四次值，使用一个三次函数来拟合每个小区间；或者我们插\(n\)次值，使用一个\(n-1\)次函数来拟合每个小区间。
+<p>这显然是可以的</p>
+Newton-Cotes公式给出了这些方法的统一框架：对于一个小区间\([a,b]\)，我们将其等分为\(n\)份，即插\(n+1\)个值，并记每次要插的值的位置为\(x_k=a+k\frac{b-a}n\)，则有\[\int_a^bf(x)\approx(b-a)\sum_{k=0}^nC_k^{(n)}f(x_k)\]
+其中\(C_k^{(n)}\)为Cotes系数，对于给定的\(k\)和\(n\)，它是一个常数，可以查表，也可以手算<sup><a href="#ref">[3]</sup>。
+
+<h2 id="ref">参考资料</h2>
+[1] 同济大学数学系《高等数学 第七版 上册》
+[2] <a href="https://oi-wiki.org/math/integral/" target="_blank">数值积分 - OI Wiki (oi-wiki.org)</a>
+[3] <a href="https://zhuanlan.zhihu.com/p/374569089" target="_blank">数值分析(9)：数值积分之Newton-Cotes求积公式和复合求积公式 - 知乎 (zhihu.com)</a>
 </body>
 </html>
