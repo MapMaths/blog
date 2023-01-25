@@ -96,7 +96,7 @@
 由于我们令\(g(x)\)经过\(f(x_{i-1})\)、\(f(\frac{x_{i-1}+x_i}2)\)、\(f(x_i)\)，有\(g(x_{i-1})=f(x_{i-1})\)、\(g(\frac{x_{i-1}+x_i}2)=f(\frac{x_{i-1}+x_i}2)\)、\(g(x_i)=f(x_i)\)
 所以，\(n\to\infty\)时，\[\sum_{i=1}^n\frac{x_i-x_{i-1}}6\left[f(x_i)+f(x_{i-1})+f\left(\frac{x_{i-1}+x_i}2\right)\right]\to\int_a^bf(x)\mathrm dx\]
 <p>当然，这个式子也可以进行化简和变形。</p>
-特别的，每一个小区间的积分公式被称为<b>辛普森公式</b>，即\[\int_a^b\approx\frac{b-a}6\left[f(a)+f(b)+f\left(\frac{a+b}2\right)\right]\]
+特别的，每一个小区间的积分公式被称为<b>辛普森公式</b>，即\[\int_a^bf(x)\approx\frac{b-a}6\left[f(a)+f(b)+f\left(\frac{a+b}2\right)\right]\mathrm dx\]
 由于这种方法使用曲线而非直线拟合，精确而且速度快，就被广泛用于数值积分的算法中，于是自然也就产生了一些优化算法。
 
   <h3>自适应辛普森法（adaptive Simpson's rule）</h3>
@@ -113,7 +113,7 @@ double asr(double l, double r, double eps, double ans, int step) { // ans是区�
   double fl = simpson(l, mid), fr = simpson(mid, r); // 分成两个小区间分别求近似值
   if (abs(fl + fr - ans) <= 15*eps && step < 0) 
     return fl + fr + (fl + fr - ans)/15;  // 足够相似的话就直接返回
-  return asr(l, mid, eps / 2, fl, step - 1) + asr(mid, r, eps / 2, fr, step - 1);  // 否则再分成两段递归求解
+  return asr(l, mid, eps/2, fl, step - 1) + asr(mid, r, eps/2, fr, step - 1);  // 否则再分成两段递归求解
 }
 
 double calc(double l, double r, double eps) { // 在main调用该函数，eps的值自定，1e-7左右即可
@@ -125,6 +125,7 @@ double calc(double l, double r, double eps) { // 在main调用该函数，eps的
 <p>这显然是可以的</p>
 Newton-Cotes公式给出了这些方法的统一框架：对于一个小区间\([a,b]\)，我们将其等分为\(n\)份，即插\((n+1)\)个值，并记每次要插的值的位置为\(x_k=a+k\frac{b-a}n\)，则有\[\int_a^bf(x)\approx(b-a)\sum_{k=0}^nC_k^{(n)}f(x_k)\]
  其中\(C_k^{(n)}\)为Cotes系数，对于给定的\(k\)和\(n\)，它是一个常数，可以查表，也可以手算<sup><a href="#ref">[3]</a></sup>。
+ <p>实际计算中，最后将所有小区间的近似值相加，或是直接把积分区间代入公式（而不是把这个区间分成许多小区间）皆可。
 
 <h2 id="ref">参考资料</h2>
 [1] 同济大学数学系《高等数学 第七版 上册》<br />
