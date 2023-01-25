@@ -119,11 +119,11 @@ double calc(double l, double r, double eps) { // 在main调用该函数，eps的
 在矩形法中，我们在每个小区间内插了一个值；在梯形法中，则插了两个值；而在辛普森法中我们插了三个值。以此类推，自然会想到能不能插四次值，使用一个三次函数来拟合每个小区间；或者我们插\(n\)次值，使用一个\(n-1\)次函数来拟合每个小区间。
 <p>这显然是可以的</p>
 Newton-Cotes公式给出了这些方法的统一框架：对于一个小区间\([a,b]\)，我们将其等分为\(n\)份，即插\(n+1\)个值，并记每次要插的值的位置为\(x_k=a+k\frac{b-a}n\)，则有\[\int_a^bf(x)\approx(b-a)\sum_{k=0}^nC_k^{(n)}f(x_k)\]
-其中\(C_k^{(n)}\)为Cotes系数，对于给定的\(k\)和\(n\)，它是一个常数，可以查表，也可以手算<sup><a href="#ref">[3]</sup>。
+ 其中\(C_k^{(n)}\)为Cotes系数，对于给定的\(k\)和\(n\)，它是一个常数，可以查表，也可以手算<sup><a href="#ref">[3]</a></sup>。
 
 <h2 id="ref">参考资料</h2>
-[1] 同济大学数学系《高等数学 第七版 上册》
-[2] <a href="https://oi-wiki.org/math/integral/" target="_blank">数值积分 - OI Wiki (oi-wiki.org)</a>
-[3] <a href="https://zhuanlan.zhihu.com/p/374569089" target="_blank">数值分析(9)：数值积分之Newton-Cotes求积公式和复合求积公式 - 知乎 (zhihu.com)</a>
+[1] 同济大学数学系《高等数学 第七版 上册》<br />
+[2] <a href="https://oi-wiki.org/math/integral/" target="_blank">数值积分 - OI Wiki (oi-wiki.org)</a><br />
+[3] <a href="https://zhuanlan.zhihu.com/p/374569089" target="_blank">数值分析(9)：数值积分之Newton-Cotes求积公式和复合求积公式 - 知乎 (zhihu.com)</a><br />
 </body>
 </html>
