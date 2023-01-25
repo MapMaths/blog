@@ -96,7 +96,7 @@
 由于我们令\(g(x)\)经过\(f(x_{i-1})\)、\(f(\frac{x_{i-1}+x_i}2)\)、\(f(x_i)\)，有\(g(x_{i-1})=f(x_{i-1})\)、\(g(\frac{x_{i-1}+x_i}2)=f(\frac{x_{i-1}+x_i}2)\)、\(g(x_i)=f(x_i)\)
 所以，\(n\to\infty\)时，\[\sum_{i=1}^n\frac{x_i-x_{i-1}}6\left[f(x_i)+f(x_{i-1})+f\left(\frac{x_{i-1}+x_i}2\right)\right]\to\int_a^bf(x)\mathrm dx\]
 <p>当然，这个式子也可以进行化简和变形。</p>
-特别的，每一个小区间的积分公式被称为<b>辛普森公式</b>，即\[\int_a^bf(x)\approx\frac{b-a}6\left[f(a)+f(b)+f\left(\frac{a+b}2\right)\right]\mathrm dx\]
+特别的，每一个小区间的积分公式被称为<b>辛普森公式</b>，即\[\int_a^bf(x)\mathrm dx\approx\frac{b-a}6\left[f(a)+f(b)+f\left(\frac{a+b}2\right)\right]\]
 由于这种方法使用曲线而非直线拟合，精确而且速度快，就被广泛用于数值积分的算法中，于是自然也就产生了一些优化算法。
 
   <h3>自适应辛普森法（adaptive Simpson's rule）</h3>
